@@ -1,0 +1,10 @@
+layout {
+     pane split_direction="vertical" { // first logical container
+         // all these panes will be laid out vertically next to each other
+         pane
+         pane split_direction="horizontal" { // second logical container
+             pane
+             pane
+         }
+     }
+ }
