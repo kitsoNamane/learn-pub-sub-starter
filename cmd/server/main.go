@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/bootdotdev/learn-pub-sub-starter/internal/pubsub"
+	"github.com/bootdotdev/learn-pub-sub-starter/internal/routing"
 	"github.com/rabbitmq/amqp091-go"
 )
 
@@ -22,6 +24,15 @@ func main() {
 	}
 	defer conn.Close()
 	fmt.Println("connection successful")
+
+	rmqpChan, err := conn.Channel()
+	if err != nil {
+		slog.Error("failed to create channel", slog.String("error_msg", err.Error()))
+	}
+	defer rmqpChan.Close()
+
+	pubsub.PublishJSON(rmqpChan, routing.ExchangePerilDirect, routing.PauseKey,
+		routing.PlayingState{IsPaused: true})
 
 	<-signalChan
 }
